@@ -29,9 +29,10 @@ ATTRIBUTE_TASKS = ['T3-2mm', 'T3-1mm-FO', 'T3-1mm']
 
 def read_uncertainty(path):
     """{(case, attribute): U as a fraction on the attribute's scale}"""
-    import pandas as pd
-    table = pd.read_parquet(path, columns=['case_name', 'attribute', 'U_%'])
-    return {(c, a): u / 100 for c, a, u in table.itertuples(index=False)}
+    from msbench.data import read_columns
+    table = read_columns(path, ['case_name', 'attribute', 'U_%'])
+    return {(c, a): (u / 100 if u is not None else float('nan'))
+            for c, a, u in zip(table['case_name'], table['attribute'], table['U_%'])}
 
 
 def read_predicted_fields(path):
@@ -41,35 +42,60 @@ def read_predicted_fields(path):
     return h5, names
 
 
-def score_fields(dataset, predictions, split, uncertainty, with_attributes):
-    """field errors of every case, and for T2 the errors of the array attributes"""
-    h5, names = read_predicted_fields(Path(predictions) / f"{split}.h5")
+def score_predictors(dataset, split, predictors, uncertainty, with_attributes):
+    """
+    field errors of every case for several predictors at once, and for T2 the errors of the array attributes; the label
+    is read and its attributes computed once per case
+    :param predictors: {name: function(row index, case name, label sample) -> (3, nx, ny) prediction}
+    :return: {name: {'fields': ..., 'attributes': ...}}
+    """
     labels = dataset.labels(split, [])
-    rows, errors = [], {name: ([], []) for name in ARRAY_SCORED}
-    with h5:
-        for i, (case, label) in enumerate(dataset.samples('16x', split)):
-            if names[i] != case:
-                raise ValueError(f"{split}: row {i} of the predictions is {names[i]}, the dataset has {case}")
-            prediction = np.asarray(h5['fields'][i], dtype=float)
-            label = label.astype(float)
-            rows.append(field_errors(prediction, label, label))
+    rows = {name: [] for name in predictors}
+    errors = {name: {a: ([], []) for a in ARRAY_SCORED} for name in predictors}
+    for i, (case, label) in enumerate(dataset.samples('16x', split)):
+        label = label.astype(float)
+        true = attributes(label) if with_attributes else None
+        for name, predict in predictors.items():
+            prediction = np.asarray(predict(i, case, label), dtype=float)
+            rows[name].append(field_errors(prediction, label, label))
             if with_attributes:
                 predicted = attributes(np.concatenate([prediction, label[3:]]))
-                true = attributes(label)
-                for name in ARRAY_SCORED:
-                    errors[name][0].append(attribute_error(name, predicted[name], true[name], labels[case]['drag'],
-                                                           labels[case]['height']))
-                    errors[name][1].append(uncertainty.get((case, name), float('nan')))
-    result = {'fields': summarise_fields(rows)}
-    if with_attributes:
-        result['attributes'] = {name: summarise_attribute(*errors[name]) for name in ARRAY_SCORED}
-    return result
+                for a in ARRAY_SCORED:
+                    errors[name][a][0].append(attribute_error(a, predicted[a], true[a], labels[case]['drag'],
+                                                              labels[case]['height']))
+                    errors[name][a][1].append(uncertainty.get((case, a), float('nan')))
+    results = {}
+    for name in predictors:
+        results[name] = {'fields': summarise_fields(rows[name])}
+        if with_attributes:
+            results[name]['attributes'] = {a: summarise_attribute(*errors[name][a]) for a in ARRAY_SCORED}
+    return results
+
+
+def score_fields(dataset, predictions, split, uncertainty, with_attributes):
+    """the predictions of one method from <predictions>/<split>.h5, in the order of the dataset file"""
+    h5, names = read_predicted_fields(Path(predictions) / f"{split}.h5")
+
+    def from_file(i, case, label):
+        if names[i] != case:
+            raise ValueError(f"{split}: row {i} of the predictions is {names[i]}, the dataset has {case}")
+        return h5['fields'][i]
+
+    with h5:
+        return score_predictors(dataset, split, {'method': from_file}, uncertainty, with_attributes)['method']
 
 
 def score_attributes(dataset, predictions, split, uncertainty):
-    """errors of the predicted attributes against the 0.25 mm OpenFOAM attributes"""
+    """errors of the predicted attributes (<predictions>/<split>.csv) against the 0.25 mm OpenFOAM attributes"""
     with open(Path(predictions) / f"{split}.csv", newline='') as file:
         predicted = {row['case_name']: row for row in csv.DictReader(file)}
+    return score_attribute_values(dataset, split, predicted, uncertainty)
+
+
+def score_attribute_values(dataset, split, predicted, uncertainty):
+    """
+    :param predicted: {case: {attribute: value}} for every case of the split
+    """
     labels = dataset.labels(split, SCORED)
     missing = sorted(set(labels) - set(predicted))
     if missing:

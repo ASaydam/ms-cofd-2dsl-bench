@@ -11,10 +11,11 @@ from msbench.metrics import (attribute_error, field_errors, regions, scale_of, s
 NX, NY = 145, 49           # a small grid of the 360 x 120 mm channel (2.5 mm)
 
 
-def sample(seed=0):
+def sample(seed=0, nx=NX, ny=NY):
     """a (6, nx, ny) sample: Poiseuille flow with a rectangular obstacle and a recirculation behind it"""
     from scipy.ndimage import distance_transform_edt
 
+    NX, NY = nx, ny   # noqa: N806 (the module defaults, replaced for other grids)
     rng = np.random.default_rng(seed)
     x = np.arange(NX)[:, None] * 360 / (NX - 1) * np.ones((1, NY))
     y = np.ones((NX, 1)) * np.arange(NY)[None, :] * 120 / (NY - 1)
@@ -54,7 +55,8 @@ def test_attribute_scales_and_summary():
 
 def fake_dataset(folder, cases=('normal_rectangle_0001', 'normal_rectangle_0002')):
     import h5py
-    import pandas as pd
+    import pyarrow as pa
+    import pyarrow.parquet as pq
 
     (folder / '16x').mkdir(parents=True)
     with h5py.File(folder / '16x' / 'test.h5', 'w') as h5:
@@ -62,9 +64,9 @@ def fake_dataset(folder, cases=('normal_rectangle_0001', 'normal_rectangle_0002'
         h5['case_name'] = np.array(cases, dtype=object).astype('S')
     rows = [{'case_name': c, 'split': 'test', 'bbox_height': 30.0, **{f'16x.{a}': 1.0 + i for a in metrics.SCORED}}
             for i, c in enumerate(cases)]
-    pd.DataFrame(rows).to_parquet(folder / 'metadata.parquet')
+    pq.write_table(pa.Table.from_pylist(rows), folder / 'metadata.parquet')
     attributes = set(metrics.SCORED) | set(metrics.ARRAY_SCORED)
-    pd.DataFrame([{'case_name': c, 'attribute': a, 'U_%': 1.0} for c in cases for a in attributes]).to_parquet(
+    pq.write_table(pa.Table.from_pylist([{'case_name': c, 'attribute': a, 'U_%': 1.0} for c in cases for a in attributes]), 
         folder / 'uncertainty.parquet')
     return cases
 
