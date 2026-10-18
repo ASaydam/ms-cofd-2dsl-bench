@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "msbench"
+version = "0.1.0"
+description = "Tasks, metrics and baselines of the MS-COFD-2DSL dataset"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "h5py", "pandas", "pyarrow"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools]
+packages = ["msbench"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

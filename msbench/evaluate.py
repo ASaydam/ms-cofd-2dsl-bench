@@ -1,0 +1,115 @@
+"""
+Scores the predictions of one method for one task (docs/tasks-and-metrics.md):
+
+    python -m msbench.evaluate <dataset folder> <predictions folder> <task> --uncertainty <label_uncertainty.parquet>
+                               --output results/<method>/<task>.json [--splits test ood_blockage ...]
+
+    task  T1, T2-2mm, T2-1mm-FO, T2-1mm (fields: <predictions folder>/<split>.h5 with fields (N, 3, 1440, 480) and
+          case_name), T3-2mm, T3-1mm-FO, T3-1mm (attributes: <predictions folder>/<split>.csv with case_name and one
+          column per scored attribute)
+
+The label uncertainty is the table of the pipeline's tools/uncertainty.py (case_name, attribute, U_%).
+"""
+
+import argparse
+import csv
+import json
+from pathlib import Path
+
+import numpy as np
+
+from msbench.attributes import attributes
+from msbench.data import SCORING_SPLITS, Dataset
+from msbench.metrics import (ARRAY_SCORED, SCORED, attribute_error, field_errors, summarise_attribute,
+                             summarise_fields)
+
+FIELD_TASKS = ['T1', 'T2-2mm', 'T2-1mm-FO', 'T2-1mm']
+ATTRIBUTE_TASKS = ['T3-2mm', 'T3-1mm-FO', 'T3-1mm']
+
+
+def read_uncertainty(path):
+    """{(case, attribute): U as a fraction on the attribute's scale}"""
+    import pandas as pd
+    table = pd.read_parquet(path, columns=['case_name', 'attribute', 'U_%'])
+    return {(c, a): u / 100 for c, a, u in table.itertuples(index=False)}
+
+
+def read_predicted_fields(path):
+    import h5py
+    h5 = h5py.File(path)
+    names = [c.decode() if isinstance(c, bytes) else c for c in h5['case_name'][:]]
+    return h5, names
+
+
+def score_fields(dataset, predictions, split, uncertainty, with_attributes):
+    """field errors of every case, and for T2 the errors of the array attributes"""
+    h5, names = read_predicted_fields(Path(predictions) / f"{split}.h5")
+    labels = dataset.labels(split, [])
+    rows, errors = [], {name: ([], []) for name in ARRAY_SCORED}
+    with h5:
+        for i, (case, label) in enumerate(dataset.samples('16x', split)):
+            if names[i] != case:
+                raise ValueError(f"{split}: row {i} of the predictions is {names[i]}, the dataset has {case}")
+            prediction = np.asarray(h5['fields'][i], dtype=float)
+            label = label.astype(float)
+            rows.append(field_errors(prediction, label, label))
+            if with_attributes:
+                predicted = attributes(np.concatenate([prediction, label[3:]]))
+                true = attributes(label)
+                for name in ARRAY_SCORED:
+                    errors[name][0].append(attribute_error(name, predicted[name], true[name], labels[case]['drag'],
+                                                           labels[case]['height']))
+                    errors[name][1].append(uncertainty.get((case, name), float('nan')))
+    result = {'fields': summarise_fields(rows)}
+    if with_attributes:
+        result['attributes'] = {name: summarise_attribute(*errors[name]) for name in ARRAY_SCORED}
+    return result
+
+
+def score_attributes(dataset, predictions, split, uncertainty):
+    """errors of the predicted attributes against the 0.25 mm OpenFOAM attributes"""
+    with open(Path(predictions) / f"{split}.csv", newline='') as file:
+        predicted = {row['case_name']: row for row in csv.DictReader(file)}
+    labels = dataset.labels(split, SCORED)
+    missing = sorted(set(labels) - set(predicted))
+    if missing:
+        raise ValueError(f"{split}: no prediction for {len(missing)} cases, e.g. {missing[:3]}")
+    result = {}
+    for name in SCORED:
+        e, u, p, t = [], [], [], []
+        for case, label in labels.items():
+            value = float(predicted[case][name])
+            e.append(attribute_error(name, value, label[name], label['drag'], label['height']))
+            u.append(uncertainty.get((case, name), float('nan')))
+            p.append(value)
+            t.append(label[name])
+        result[name] = summarise_attribute(e, u, p if name in ('Fx', 'Fy') else None, t if name in ('Fx', 'Fy') else None)
+    return {'attributes': result}
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Score the predictions of a method for a task")
+    parser.add_argument('dataset')
+    parser.add_argument('predictions')
+    parser.add_argument('task', choices=FIELD_TASKS + ATTRIBUTE_TASKS)
+    parser.add_argument('--uncertainty', required=True, help="label_uncertainty.parquet")
+    parser.add_argument('--output', required=True, help="results/<method>/<task>.json")
+    parser.add_argument('--splits', nargs='*', default=SCORING_SPLITS)
+    args = parser.parse_args()
+
+    dataset, uncertainty = Dataset(args.dataset), read_uncertainty(args.uncertainty)
+    results = {'task': args.task, 'splits': {}}
+    for split in args.splits:
+        if args.task in FIELD_TASKS:
+            results['splits'][split] = score_fields(dataset, args.predictions, split, uncertainty,
+                                                    with_attributes=args.task.startswith('T2'))
+        else:
+            results['splits'][split] = score_attributes(dataset, args.predictions, split, uncertainty)
+        print(f"{split}: scored", flush=True)
+    Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output).write_text(json.dumps(results, indent=1) + '\n')
+    print(f"written to {args.output}")
+
+
+if __name__ == "__main__":
+    main()
