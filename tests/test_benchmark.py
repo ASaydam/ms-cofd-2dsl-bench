@@ -100,6 +100,23 @@ def test_evaluate_perfect_predictions(tmp_path, monkeypatch):
             assert result['fields']['velocity']['median'] == 0
 
 
+def test_uncertainty_sources(tmp_path):
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    from msbench.evaluate import read_uncertainty
+
+    rows = [{'case_name': 'c', 'attribute': 'dissipation', 'source': 'openfoam', 'U_%': 0.5},
+            {'case_name': 'c', 'attribute': 'dissipation', 'source': 'array', 'U_%': 3.0}]
+    pq.write_table(pa.Table.from_pylist(rows), tmp_path / 'u.parquet')
+    u = read_uncertainty(tmp_path / 'u.parquet')
+    assert u[('c', 'dissipation', 'openfoam')] == pytest.approx(0.005)
+    assert u[('c', 'dissipation', 'array')] == pytest.approx(0.03)
+
+    pq.write_table(pa.Table.from_pylist([{k: v for k, v in rows[0].items() if k != 'source'}]), tmp_path / 'old.parquet')
+    old = read_uncertainty(tmp_path / 'old.parquet')                  # no source column: one U for both
+    assert old[('c', 'dissipation', 'openfoam')] == old[('c', 'dissipation', 'array')] == pytest.approx(0.005)
+
+
 def test_evaluate_refuses_another_case_order(tmp_path):
     import h5py
     from msbench import evaluate

@@ -8,7 +8,9 @@ Scores the predictions of one method for one task (docs/tasks-and-metrics.md):
           case_name), T3-2mm, T3-1mm-FO, T3-1mm (attributes: <predictions folder>/<split>.csv with case_name and one
           column per scored attribute)
 
-The label uncertainty is the table of the pipeline's tools/uncertainty.py (case_name, attribute, U_%).
+The label uncertainty is the table of the pipeline's tools/uncertainty.py (case_name, attribute, source, U_%): source
+"openfoam" for the attributes on the solver mesh (T3), "array" for the attributes computed from the arrays (T2,
+decision 4 of docs/tasks-and-metrics.md). A table without the source column gives every attribute one U for both.
 """
 
 import argparse
@@ -28,11 +30,18 @@ ATTRIBUTE_TASKS = ['T3-2mm', 'T3-1mm-FO', 'T3-1mm']
 
 
 def read_uncertainty(path):
-    """{(case, attribute): U as a fraction on the attribute's scale}"""
+    """{(case, attribute, source): U as a fraction on the attribute's scale}, source 'openfoam' or 'array'"""
+    import pyarrow.parquet as pq
     from msbench.data import read_columns
-    table = read_columns(path, ['case_name', 'attribute', 'U_%'])
-    return {(c, a): (u / 100 if u is not None else float('nan'))
-            for c, a, u in zip(table['case_name'], table['attribute'], table['U_%'])}
+
+    has_source = 'source' in pq.read_schema(path).names
+    table = read_columns(path, ['case_name', 'attribute', 'U_%'] + (['source'] if has_source else []))
+    sources = table['source'] if has_source else [None] * len(table['case_name'])
+    uncertainty = {}
+    for c, a, u, s in zip(table['case_name'], table['attribute'], table['U_%'], sources):
+        for source in ([s] if s else ['openfoam', 'array']):
+            uncertainty[(c, a, source)] = u / 100 if u is not None else float('nan')
+    return uncertainty
 
 
 def read_predicted_fields(path):
@@ -63,7 +72,7 @@ def score_predictors(dataset, split, predictors, uncertainty, with_attributes):
                 for a in ARRAY_SCORED:
                     errors[name][a][0].append(attribute_error(a, predicted[a], true[a], labels[case]['drag'],
                                                               labels[case]['height']))
-                    errors[name][a][1].append(uncertainty.get((case, a), float('nan')))
+                    errors[name][a][1].append(uncertainty.get((case, a, 'array'), float('nan')))
     results = {}
     for name in predictors:
         results[name] = {'fields': summarise_fields(rows[name])}
@@ -106,7 +115,7 @@ def score_attribute_values(dataset, split, predicted, uncertainty):
         for case, label in labels.items():
             value = float(predicted[case][name])
             e.append(attribute_error(name, value, label[name], label['drag'], label['height']))
-            u.append(uncertainty.get((case, name), float('nan')))
+            u.append(uncertainty.get((case, name, 'openfoam'), float('nan')))
             p.append(value)
             t.append(label[name])
         result[name] = summarise_attribute(e, u, p if name in ('Fx', 'Fy') else None, t if name in ('Fx', 'Fy') else None)

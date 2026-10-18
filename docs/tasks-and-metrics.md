@@ -74,7 +74,9 @@ The error of a case is e = (prediction − label) / scale, with the scale of the
 - every other attribute relative to its label.
 
 Every label carries its numerical uncertainty U on the same scale. U comes from the four second-order levels, with
-the least-squares procedure of Eça & Hoekstra (2014), as computed by `tools/uncertainty.py` of the pipeline.
+the least-squares procedure of Eça & Hoekstra (2014), as computed by `tools/uncertainty.py` of the pipeline. The T3
+labels use the U of the OpenFOAM values. The T2 attributes use the U of the values computed from the arrays
+(decision 4).
 
 Per split and attribute:
 
@@ -140,5 +142,15 @@ improves on simply refining.
    cost, and the baseline "coarse attribute as it is" uses them.
 3. **The label uncertainty is a file of the benchmark:** `references/label_uncertainty.parquet`, made by the
    pipeline's `tools/uncertainty.py` at cb3473b from the v1.0.0 files. The benchmark does not compute it itself.
-4. **The uncertainty of the T2 array attributes:** the U of the same OpenFOAM attribute. To be revisited when the check
-   of the arrays against the solver mesh (pipeline, task 9) is in.
+4. **The uncertainty of the T2 array attributes** (revised 2026-10-18):
+   - The U of the same attribute computed from the arrays of the four levels (source `array` in the uncertainty file),
+     with the same procedure.
+   - The first choice, the U of the OpenFOAM attribute, is too small for some array attributes. The resampling loses a
+     different amount at each level: from the arrays, dissipation is 1.7 % low at 0.25 mm and 13 % low at 2 mm. Even
+     the 0.5 mm solve was within U for only 8 % of the cases.
+   - Median U, OpenFOAM → array:
+     - dissipation 0.49 → 2.94 %;
+     - mean vorticity 0.34 → 0.90 %;
+     - wake velocity 0.54 → 1.03 %;
+     - recirculation, flow split and Δp about equal.
+   - T3 keeps the OpenFOAM U.

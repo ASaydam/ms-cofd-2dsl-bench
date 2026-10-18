@@ -4,7 +4,8 @@ Trains one reference network on one task and scores it (docs/tasks-and-metrics.m
     python -m msbench.train <dataset folder> <run folder> --task T2-1mm --model unet --seed 0
                             --uncertainty references/label_uncertainty.parquet [--epochs 40 --batch 4 --hours 20]
 
-The run folder holds last.pt (to continue an interrupted run: the same command again), best.pt (the best validation
+The run folder holds last.pt (to continue an interrupted run: the same command again; given again after the last
+epoch, it only scores best.pt, e.g. with a newer uncertainty file), best.pt (the best validation
 error), log.csv (one line per epoch) and, at the end, results/<model>-s<seed>/<task>.json in the format of
 msbench.evaluate, with the cost of the run (GPU-hours, inference time per case, GPU, code revision).
 
@@ -111,7 +112,7 @@ def main():
     steps = args.epochs * len(train_loader)
     scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=args.lr, total_steps=max(steps, 1),
                                                     pct_start=0.05)
-    state = {'epoch': 0, 'best': float('inf'), 'seconds': 0.0}
+    state = {'epoch': 0, 'best': float('inf'), 'seconds': 0.0, 'revision': revision()}
     if (run / 'last.pt').exists():                                   # continue an interrupted run
         checkpoint = torch.load(run / 'last.pt', map_location=device, weights_only=False)
         model.load_state_dict(checkpoint['model'])
@@ -184,7 +185,9 @@ def main():
                        'inference_seconds_per_case_median': float(np.median(timings)) if timings else None,
                        'parameters': sum(p.numel() for p in model.parameters()),
                        'best_val_velocity_rel_l2': state['best']}
-    results['config'] = {**vars(args), 'revision': revision(), 'slurm_job_id': os.environ.get('SLURM_JOB_ID', '')}
+    # a finished run given again only scores (to rescore with a newer evaluation): the training revision is kept
+    results['config'] = {**vars(args), 'revision': revision(), 'training_revision': state.get('revision', ''),
+                         'slurm_job_id': os.environ.get('SLURM_JOB_ID', '')}
     output = run / 'results' / method / f"{args.task}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(results, indent=1) + '\n')
