@@ -8,9 +8,11 @@ Scores the predictions of one method for one task (docs/tasks-and-metrics.md):
           case_name), T3-2mm, T3-1mm-FO, T3-1mm (attributes: <predictions folder>/<split>.csv with case_name and one
           column per scored attribute)
 
-The label uncertainty is the table of the pipeline's tools/uncertainty.py (case_name, attribute, source, U_%): source
-"openfoam" for the attributes on the solver mesh (T3), "array" for the attributes computed from the arrays (T2,
-decision 4 of docs/tasks-and-metrics.md). A table without the source column gives every attribute one U for both.
+The label uncertainty is the table of the pipeline's tools/uncertainty.py (case_name, attribute, source, U_%). Both
+T2 and T3 are scored against source "openfoam", the uncertainty of the 0.25 mm solution (decision 4 of
+docs/tasks-and-metrics.md). Source "array", the convergence of the array attributes as mesh and grid are refined
+together, is a validation result and is not used for scoring. A table without the source column gives every attribute
+one U for both.
 """
 
 import argparse
@@ -26,6 +28,7 @@ from msbench.metrics import (ARRAY_SCORED, SCORED, attribute_error, field_errors
                              summarise_fields)
 
 FIELD_TASKS = ['T1', 'T2-2mm', 'T2-1mm-FO', 'T2-1mm']
+SCORING_SOURCE = 'openfoam'           # the U both tasks are scored against (decision 4)
 ATTRIBUTE_TASKS = ['T3-2mm', 'T3-1mm-FO', 'T3-1mm']
 
 
@@ -72,7 +75,7 @@ def score_predictors(dataset, split, predictors, uncertainty, with_attributes):
                 for a in ARRAY_SCORED:
                     errors[name][a][0].append(attribute_error(a, predicted[a], true[a], labels[case]['drag'],
                                                               labels[case]['height']))
-                    errors[name][a][1].append(uncertainty.get((case, a, 'array'), float('nan')))
+                    errors[name][a][1].append(uncertainty.get((case, a, SCORING_SOURCE), float('nan')))
     results = {}
     for name in predictors:
         results[name] = {'fields': summarise_fields(rows[name])}
@@ -115,7 +118,7 @@ def score_attribute_values(dataset, split, predicted, uncertainty):
         for case, label in labels.items():
             value = float(predicted[case][name])
             e.append(attribute_error(name, value, label[name], label['drag'], label['height']))
-            u.append(uncertainty.get((case, name, 'openfoam'), float('nan')))
+            u.append(uncertainty.get((case, name, SCORING_SOURCE), float('nan')))
             p.append(value)
             t.append(label[name])
         result[name] = summarise_attribute(e, u, p if name in ('Fx', 'Fy') else None, t if name in ('Fx', 'Fy') else None)
