@@ -24,6 +24,19 @@ python -m msbench.evaluate <dataset folder> <predictions folder> T2-1mm \
 Predictions: `<split>.h5` with `fields` (N, 3, 1440, 480) and `case_name`, in the order of the dataset file of the split
 (fields tasks), or `<split>.csv` with `case_name` and one column per scored attribute (T3).
 
+## Reference networks
+
+A UNet and a Fourier neural operator (`msbench/models.py`), trained and scored in one command:
+
+```bash
+pip install -e .[train]
+python -m msbench.train <dataset folder> <run folder> --task T2-1mm --model unet --seed 0 \
+    --uncertainty references/label_uncertainty.parquet
+```
+
+For T2 the networks learn the correction to the bicubic interpolation of the coarse fields. A SLURM example is in
+`scripts/train.sbatch`.
+
 ## Adding a method
 
 Open a pull request with:
