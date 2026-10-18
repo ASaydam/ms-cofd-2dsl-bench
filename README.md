@@ -34,7 +34,8 @@ python -m msbench.train <dataset folder> <run folder> --task T2-1mm --model unet
     --uncertainty references/label_uncertainty.parquet
 ```
 
-For T2 the networks learn the correction to the bicubic interpolation of the coarse fields. A SLURM example is in
+For T2 the networks learn the correction to the interpolated coarse fields: bicubic for the velocity and bicubic with
+the obstacle filled for the pressure, the best interpolation of each channel. A SLURM example is in
 `scripts/train.sbatch`.
 
 ## Adding a method

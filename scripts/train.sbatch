@@ -23,7 +23,14 @@ TASK=$1 MODEL=$2 SEED=$3
 
 # source activate msbench                              # CLUSTER: an environment with torch, h5py, pyarrow, scipy
 
+# one BLAS thread per data-loading worker: the workers interpolate with numpy, and a full-width thread pool in each
+# of them starves the GPU (pilot 2026-10-18: 35 % GPU use)
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+
 cd "$SLURM_SUBMIT_DIR"                                 # submitted from the repository folder (logs/ must exist)
+RUN="$RUNS/$TASK/$MODEL-s$SEED"
+mkdir -p "$RUN"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
-python -m msbench.train "$DATASET" "$RUNS/$TASK/$MODEL-s$SEED" --task "$TASK" --model "$MODEL" --seed "$SEED" \
+nvidia-smi --query-gpu=timestamp,utilization.gpu,memory.used --format=csv -l 60 >> "$RUN/gpu.csv" &
+python -m msbench.train "$DATASET" "$RUN" --task "$TASK" --model "$MODEL" --seed "$SEED" \
     --uncertainty references/label_uncertainty.parquet --hours "$HOURS" --workers "$SLURM_CPUS_PER_TASK" "${@:4}"

@@ -3,8 +3,10 @@ PyTorch view of a task (docs/tasks-and-metrics.md) on the dataset files, one sam
 training split is 51 GB, more than a job's share of memory).
 
     T1          input: the geometry channels of the 0.25 mm grid; base: 0
-    T2-<track>  input: the coarse fields interpolated to the 0.25 mm grid (bicubic, obstacle filled) and the geometry
-                channels of the 0.25 mm grid; base: the interpolated fields, so a network learns the correction
+    T2-<track>  input: the coarse fields interpolated to the 0.25 mm grid and the geometry channels of the 0.25 mm
+                grid; base: the interpolated fields, so a network learns the correction. The interpolation is the best
+                baseline of each channel (D3, 2026-10-18): bicubic for u_x and u_y (the zero velocity inside the
+                obstacle helps at the wall), bicubic with the obstacle filled for p
 
 Every channel is normalised with the mean and standard deviation of the training split stored in the files (the
 fields with those of the 0.25 mm run). A sample is (input, target, base, fluid mask), the target and the base
@@ -16,10 +18,11 @@ import torch
 from torch.utils.data import Dataset
 
 from msbench.data import LABEL_RUN, TRACKS
-from msbench.interpolation import upsample_sample
+from msbench.interpolation import upsample
 
 GEOMETRY = slice(3, 6)
 FIELDS = slice(0, 3)
+BASE_METHODS = ('bicubic', 'bicubic', 'bicubic_filled')         # u_x, u_y, p
 
 
 def task_run(task):
@@ -76,7 +79,9 @@ class TaskData(Dataset):
         target = self.normalise(label[FIELDS], FIELDS)
         if self.coarse_run:
             coarse = self.files['coarse']['fields'][i].astype(np.float64)
-            base = self.normalise(upsample_sample(coarse, *self.shape, 'bicubic_filled').astype(np.float32), FIELDS)
+            base = np.stack([upsample(coarse[c], *self.shape, method, coarse[4])
+                             for c, method in enumerate(BASE_METHODS)]).astype(np.float32)
+            base = self.normalise(base, FIELDS)
             inputs = np.concatenate([base, geometry])
         else:
             base = np.zeros_like(target)
