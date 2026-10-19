@@ -1,0 +1,3 @@
+# reference data: stored byte for byte, so the MD5s in references/README.md hold
+*.csv -text
+*.parquet binary
