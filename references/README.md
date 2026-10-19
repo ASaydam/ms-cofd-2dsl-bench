@@ -9,7 +9,10 @@ It has two sources, in the column `source`:
   - **Made with:** `python -m tools.uncertainty <dataset folder> <output>` (pipeline commit cb3473b; identical with
     ec2ac0e).
   - **Inputs:** the v1.0.0 files `mesh_study.parquet` (MD5 7f7988317b54c06e33eaa0b0c7ee1db7) and `metadata.parquet`
-    (MD5 286ce8431baf13cb0490828f91ce4858). Both match the dataset's `checksums.md5`.
+    (MD5 286ce8431baf13cb0490828f91ce4858).
+  - The metadata was rebuilt on 2026-10-19 (now MD5 43bf223f07f4e5e2081e639beffc1882), with only the empty
+    `<run>.init_from` cells filled. The uncertainty uses only the cell counts of the metadata, which are unchanged,
+    so this file stays valid.
 - **`array`:** the same attributes computed from the arrays of every level on its own grid. 36,000 rows (4,500 cases
   × 8 attributes). **A validation result, not used for scoring.**
   - **What it measures:** how the array values converge when the solver mesh and the array grid are refined together.
