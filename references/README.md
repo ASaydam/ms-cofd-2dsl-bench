@@ -19,8 +19,10 @@ the pipeline's `tools/uncertainty.py` at commit 37588e4 (2026-10-19). The two so
   - **What it measures:** how the array values converge when the solver mesh and the array grid are refined together.
     The resampling loses a different amount at each level, so this U is larger than the OpenFOAM one for gradient
     quantities: dissipation 2.9 % against 0.5 % (median).
-  - **Why it is not used for scoring:** in T2 the prediction and the label are arrays on the same grid, and the
-    resampling loss cancels between them (decision 4).
+  - **Why it is not used for scoring:** in T2 the prediction and the label are arrays on the same grid, so both carry a
+    resampling loss of the same origin. This U describes how that loss changes from level to level, not a comparison
+    on one fixed grid (decision 4). The two losses need not cancel exactly, so a T2 score measures agreement with the
+    stored label arrays.
   - **Made with:** `python -m tools.uncertainty <dataset folder> <output> --arrays array_check`.
   - **Inputs:** `metadata.parquet` as above, and the csv files in `array_check/`.
   - Compared with the first version of 2026-10-18 (ec2ac0e, which used pandas): pandas' fast float parser had dropped

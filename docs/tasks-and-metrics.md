@@ -144,8 +144,10 @@ improves on simply refining.
 4. **The uncertainty of the T2 array attributes:** the U of the same OpenFOAM attribute. It is the uncertainty of the
    0.25 mm solution. (Decided 2026-10-18; briefly changed the same day and taken back, see below.)
    - In T2 the prediction and the label are arrays on the same 1440 × 480 grid, and their attributes come from the
-     same array function. The loss of the resampling on that grid is common to both and cancels in the comparison
-     (the array check: dissipation 1.7 % low at 0.25 mm).
+     same array function. Both carry a resampling loss of the same origin (the array check: dissipation 1.7 % low at
+     0.25 mm). The two losses need not cancel, because an error in the prediction can change gradients and other
+     nonlinear quantities differently from the label. A T2 score therefore measures agreement with the stored label
+     arrays, not accuracy against the solution on the mesh.
    - The uncertainty of the array attributes over the four levels (source `array` in the uncertainty file) measures
      something else. It is how the array values converge when the solver mesh and the array grid are refined
      together, with the resampling loss changing from 13 % at 2 mm to 1.7 % at 0.25 mm for dissipation. That makes
