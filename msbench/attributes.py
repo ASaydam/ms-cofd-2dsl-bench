@@ -10,7 +10,7 @@ MS-COFD-2DSL pipeline (copied unchanged, so a prediction and its label are measu
     dissipation               nu * integral of |grad u|^2 over the fluid (first 5 mm left out: inlet corners)
     peak_vorticity            largest |vorticity| (not scored: singular at corners)
     mean_vorticity            |vorticity| averaged over the fluid area, first 5 mm left out
-    wake_min_u_x              smallest u_x 20 mm behind the obstacle (wake velocity deficit)
+    wake_min_u_x              smallest u_x 20 mm behind the obstacle, within its y extent (wake velocity deficit)
 """
 
 import numpy as np
@@ -65,5 +65,6 @@ def attributes(sample, domain=DOMAIN):
     result['mean_vorticity'] = float(np.abs(vorticity[region]).mean())
 
     i_wake = min(int(round((x_end + 20) / hx)), nx - 1)
-    result['wake_min_u_x'] = float(ux[i_wake][fluid[i_wake]].min())
+    behind_obstacle = (y[i_wake] >= y[obstacle].min()) & (y[i_wake] <= y[obstacle].max())
+    result['wake_min_u_x'] = float(ux[i_wake][fluid[i_wake] & behind_obstacle].min())
     return result

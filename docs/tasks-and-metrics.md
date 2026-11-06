@@ -4,7 +4,7 @@ This document fixes what is predicted, from what, on which cases, and how it is 
 is trained, and a change to it is a new benchmark version.
 
 The data is MS-COFD-2DSL v1.0.0 (git tag `data-v1.0.0` of the pipeline repository; `checksums.md5` of the dataset
-folder has the MD5 817adefb132205f30bf633710f554dc2).
+folder has the MD5 82a46f931bb1d60b57dbc564305019fb).
 
 ## Data
 
@@ -56,7 +56,7 @@ Each split reports the median and the mean over its cases.
 - drag Fx, with its pressure and friction parts;
 - lift Fy;
 - recirculation length and area;
-- wake velocity (smallest u_x 20 mm behind the obstacle);
+- wake velocity (smallest u_x 20 mm behind the obstacle, within its y extent);
 - base pressure;
 - dissipation;
 - mean vorticity;
