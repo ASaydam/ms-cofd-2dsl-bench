@@ -5,7 +5,8 @@ dataset has 4,500 obstacles in a 360 × 120 mm channel, each solved to steady st
 0.25 mm, with an uncertainty for every label.
 
 The data is on Hugging Face: the arrays and tables at
-[asaydam/ms-cofd-2dsl](https://huggingface.co/datasets/asaydam/ms-cofd-2dsl), and the archived OpenFOAM case of every
+[asaydam/ms-cofd-2dsl](https://huggingface.co/datasets/asaydam/ms-cofd-2dsl)
+(DOI [10.57967/hf/11554](https://doi.org/10.57967/hf/11554)), and the archived OpenFOAM case of every
 run at [asaydam/ms-cofd-2dsl-raw](https://huggingface.co/datasets/asaydam/ms-cofd-2dsl-raw)
 (DOI [10.57967/hf/11553](https://doi.org/10.57967/hf/11553)). The benchmark needs only the arrays and tables.
 
