@@ -1,0 +1,318 @@
+{
+ "task": "T3-1mm-FO",
+ "baseline": "coarse-as-is",
+ "splits": {
+  "test": {
+   "attributes": {
+    "Fx": {
+     "cases": 386,
+     "median_abs_error": 0.03991516356502317,
+     "p90_abs_error": 0.05209885351993174,
+     "within_uncertainty_rate": 0.12953367875647667,
+     "spearman": 0.9996129508118905
+    },
+    "Fx_pressure": {
+     "cases": 386,
+     "median_abs_error": 0.009972187245301842,
+     "p90_abs_error": 0.018560973600654992,
+     "within_uncertainty_rate": 0.9222797927461139
+    },
+    "Fx_viscous": {
+     "cases": 386,
+     "median_abs_error": 0.028877702473633037,
+     "p90_abs_error": 0.04299205776197902,
+     "within_uncertainty_rate": 0.6528497409326425
+    },
+    "Fy": {
+     "cases": 386,
+     "median_abs_error": 0.01364649113985076,
+     "p90_abs_error": 0.037583931658213006,
+     "within_uncertainty_rate": 0.41968911917098445,
+     "spearman": 0.9987764655314962
+    },
+    "recirculation_length_mm": {
+     "cases": 386,
+     "median_abs_error": 0.10352981191349836,
+     "p90_abs_error": 0.16745482586764465,
+     "within_uncertainty_rate": 0.16062176165803108
+    },
+    "recirculation_area_mm2": {
+     "cases": 386,
+     "median_abs_error": 0.06709063138724872,
+     "p90_abs_error": 0.1321931153380121,
+     "within_uncertainty_rate": 0.34196891191709844
+    },
+    "wake_min_u_x": {
+     "cases": 386,
+     "median_abs_error": 0.028584549999999993,
+     "p90_abs_error": 0.049335000000000004,
+     "within_uncertainty_rate": 0.11917098445595854
+    },
+    "base_pressure": {
+     "cases": 386,
+     "median_abs_error": 0.026667575162371643,
+     "p90_abs_error": 0.0756396446960298,
+     "within_uncertainty_rate": 0.33419689119170987
+    },
+    "dissipation": {
+     "cases": 386,
+     "median_abs_error": 0.0444261661985938,
+     "p90_abs_error": 0.06756651173390485,
+     "within_uncertainty_rate": 0.0
+    },
+    "mean_vorticity": {
+     "cases": 386,
+     "median_abs_error": 0.022147424769136427,
+     "p90_abs_error": 0.034515841566620735,
+     "within_uncertainty_rate": 0.0025906735751295338
+    },
+    "dp_sections": {
+     "cases": 386,
+     "median_abs_error": 0.023147742331860115,
+     "p90_abs_error": 0.03010975430224444,
+     "within_uncertainty_rate": 0.14766839378238342
+    },
+    "flow_split_upper": {
+     "cases": 386,
+     "median_abs_error": 0.0029406233161989445,
+     "p90_abs_error": 0.008225279096522839,
+     "within_uncertainty_rate": 0.39896373056994816
+    }
+   }
+  },
+  "ood_blockage": {
+   "attributes": {
+    "Fx": {
+     "cases": 224,
+     "median_abs_error": 0.03277798377039247,
+     "p90_abs_error": 0.04446684665379445,
+     "within_uncertainty_rate": 0.27232142857142855,
+     "spearman": 0.99293401665599
+    },
+    "Fx_pressure": {
+     "cases": 224,
+     "median_abs_error": 0.010820744723880782,
+     "p90_abs_error": 0.019433597797887142,
+     "within_uncertainty_rate": 0.9776785714285714
+    },
+    "Fx_viscous": {
+     "cases": 224,
+     "median_abs_error": 0.021940631936034734,
+     "p90_abs_error": 0.030387699747826073,
+     "within_uncertainty_rate": 0.7232142857142857
+    },
+    "Fy": {
+     "cases": 224,
+     "median_abs_error": 0.014064907425883743,
+     "p90_abs_error": 0.033123879161196,
+     "within_uncertainty_rate": 0.36160714285714285,
+     "spearman": 0.9989750160153749
+    },
+    "recirculation_length_mm": {
+     "cases": 224,
+     "median_abs_error": 0.1375433014190505,
+     "p90_abs_error": 0.18742130630370485,
+     "within_uncertainty_rate": 0.004464285714285714
+    },
+    "recirculation_area_mm2": {
+     "cases": 224,
+     "median_abs_error": 0.09466076764067086,
+     "p90_abs_error": 0.1425550251406795,
+     "within_uncertainty_rate": 0.05803571428571429
+    },
+    "wake_min_u_x": {
+     "cases": 224,
+     "median_abs_error": 0.021729500000000006,
+     "p90_abs_error": 0.055738699999999995,
+     "within_uncertainty_rate": 0.17857142857142858
+    },
+    "base_pressure": {
+     "cases": 224,
+     "median_abs_error": 0.07637656907944254,
+     "p90_abs_error": 0.13144372786967398,
+     "within_uncertainty_rate": 0.16517857142857142
+    },
+    "dissipation": {
+     "cases": 224,
+     "median_abs_error": 0.06987606297636206,
+     "p90_abs_error": 0.09221529840684986,
+     "within_uncertainty_rate": 0.0
+    },
+    "mean_vorticity": {
+     "cases": 224,
+     "median_abs_error": 0.033658790543672774,
+     "p90_abs_error": 0.045818322431163606,
+     "within_uncertainty_rate": 0.0
+    },
+    "dp_sections": {
+     "cases": 224,
+     "median_abs_error": 0.022239659501023877,
+     "p90_abs_error": 0.03156044932857442,
+     "within_uncertainty_rate": 0.32142857142857145
+    },
+    "flow_split_upper": {
+     "cases": 224,
+     "median_abs_error": 0.005022510013170246,
+     "p90_abs_error": 0.013039781763435312,
+     "within_uncertainty_rate": 0.3794642857142857
+    }
+   }
+  },
+  "ood_rotation": {
+   "attributes": {
+    "Fx": {
+     "cases": 216,
+     "median_abs_error": 0.03726967905020459,
+     "p90_abs_error": 0.050688343805367894,
+     "within_uncertainty_rate": 0.2962962962962963,
+     "spearman": 0.9996189523571368
+    },
+    "Fx_pressure": {
+     "cases": 216,
+     "median_abs_error": 0.009807513734476202,
+     "p90_abs_error": 0.01714040115929432,
+     "within_uncertainty_rate": 0.9953703703703703
+    },
+    "Fx_viscous": {
+     "cases": 216,
+     "median_abs_error": 0.027520242346066856,
+     "p90_abs_error": 0.03977865933580862,
+     "within_uncertainty_rate": 0.7407407407407407
+    },
+    "Fy": {
+     "cases": 216,
+     "median_abs_error": 0.008611190686932215,
+     "p90_abs_error": 0.023964513941563945,
+     "within_uncertainty_rate": 0.47685185185185186,
+     "spearman": 0.9994320008573571
+    },
+    "recirculation_length_mm": {
+     "cases": 216,
+     "median_abs_error": 0.15254497963009728,
+     "p90_abs_error": 0.18359417114808874,
+     "within_uncertainty_rate": 0.037037037037037035
+    },
+    "recirculation_area_mm2": {
+     "cases": 216,
+     "median_abs_error": 0.1137215579593461,
+     "p90_abs_error": 0.15074362426775675,
+     "within_uncertainty_rate": 0.20833333333333334
+    },
+    "wake_min_u_x": {
+     "cases": 216,
+     "median_abs_error": 0.029957000000000004,
+     "p90_abs_error": 0.05132194999999999,
+     "within_uncertainty_rate": 0.1712962962962963
+    },
+    "base_pressure": {
+     "cases": 216,
+     "median_abs_error": 0.048926178142076476,
+     "p90_abs_error": 0.0900122512463343,
+     "within_uncertainty_rate": 0.3055555555555556
+    },
+    "dissipation": {
+     "cases": 216,
+     "median_abs_error": 0.05413920303163006,
+     "p90_abs_error": 0.0738917701344497,
+     "within_uncertainty_rate": 0.0
+    },
+    "mean_vorticity": {
+     "cases": 216,
+     "median_abs_error": 0.028206330624093313,
+     "p90_abs_error": 0.03885725574851842,
+     "within_uncertainty_rate": 0.0
+    },
+    "dp_sections": {
+     "cases": 216,
+     "median_abs_error": 0.02228159217874541,
+     "p90_abs_error": 0.028608280567274297,
+     "within_uncertainty_rate": 0.35185185185185186
+    },
+    "flow_split_upper": {
+     "cases": 216,
+     "median_abs_error": 0.0020176418879266867,
+     "p90_abs_error": 0.007423833052124667,
+     "within_uncertainty_rate": 0.41203703703703703
+    }
+   }
+  },
+  "ood_position": {
+   "attributes": {
+    "Fx": {
+     "cases": 204,
+     "median_abs_error": 0.03986148927679367,
+     "p90_abs_error": 0.05154952850126162,
+     "within_uncertainty_rate": 0.12254901960784313,
+     "spearman": 0.9995010283339577
+    },
+    "Fx_pressure": {
+     "cases": 204,
+     "median_abs_error": 0.009214420698212739,
+     "p90_abs_error": 0.018013654584472485,
+     "within_uncertainty_rate": 0.9313725490196079
+    },
+    "Fx_viscous": {
+     "cases": 204,
+     "median_abs_error": 0.030524561638871357,
+     "p90_abs_error": 0.044296824242933526,
+     "within_uncertainty_rate": 0.696078431372549
+    },
+    "Fy": {
+     "cases": 204,
+     "median_abs_error": 0.012934923330949063,
+     "p90_abs_error": 0.035396930479281385,
+     "within_uncertainty_rate": 0.39215686274509803,
+     "spearman": 0.9985878960499254
+    },
+    "recirculation_length_mm": {
+     "cases": 204,
+     "median_abs_error": 0.09664039116834391,
+     "p90_abs_error": 0.16863091074383546,
+     "within_uncertainty_rate": 0.14705882352941177
+    },
+    "recirculation_area_mm2": {
+     "cases": 204,
+     "median_abs_error": 0.061101743019768257,
+     "p90_abs_error": 0.12717079000060016,
+     "within_uncertainty_rate": 0.3235294117647059
+    },
+    "wake_min_u_x": {
+     "cases": 204,
+     "median_abs_error": 0.031081499999999998,
+     "p90_abs_error": 0.053165279999999995,
+     "within_uncertainty_rate": 0.09313725490196079
+    },
+    "base_pressure": {
+     "cases": 204,
+     "median_abs_error": 0.02377784097299987,
+     "p90_abs_error": 0.07480487811051689,
+     "within_uncertainty_rate": 0.3431372549019608
+    },
+    "dissipation": {
+     "cases": 204,
+     "median_abs_error": 0.04384386610441562,
+     "p90_abs_error": 0.06811420341546592,
+     "within_uncertainty_rate": 0.0
+    },
+    "mean_vorticity": {
+     "cases": 204,
+     "median_abs_error": 0.020422472154609003,
+     "p90_abs_error": 0.03303127380899983,
+     "within_uncertainty_rate": 0.004901960784313725
+    },
+    "dp_sections": {
+     "cases": 204,
+     "median_abs_error": 0.02245029986181238,
+     "p90_abs_error": 0.030181555604801402,
+     "within_uncertainty_rate": 0.12745098039215685
+    },
+    "flow_split_upper": {
+     "cases": 204,
+     "median_abs_error": 0.002706583988343199,
+     "p90_abs_error": 0.010193599311739028,
+     "within_uncertainty_rate": 0.4166666666666667
+    }
+   }
+  }
+ }
+}

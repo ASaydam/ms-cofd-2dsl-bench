@@ -1,0 +1,424 @@
+{
+ "task": "T2-2mm",
+ "method": "unet-s2",
+ "splits": {
+  "test": {
+   "fields": {
+    "u_x": {
+     "median": 0.0012620924886850007,
+     "mean": 0.0014491425201262644
+    },
+    "u_y": {
+     "median": 0.00549858817423262,
+     "mean": 0.006037235780161514
+    },
+    "p": {
+     "median": 0.0029731425993190447,
+     "mean": 0.0032906297614495347
+    },
+    "velocity": {
+     "median": 0.0013693814789583778,
+     "mean": 0.0015741412976947222
+    },
+    "u_x_near": {
+     "median": 0.02898878995369648,
+     "mean": 0.031152322487411895
+    },
+    "u_y_near": {
+     "median": 0.02362975428547047,
+     "mean": 0.02605880980275882
+    },
+    "p_near": {
+     "median": 0.018836293891032186,
+     "mean": 0.020396870748905123
+    },
+    "velocity_near": {
+     "median": 0.027233890312317443,
+     "mean": 0.029017449296488525
+    },
+    "u_x_bulk": {
+     "median": 0.0011686107432020802,
+     "mean": 0.001356367540636743
+    },
+    "u_y_bulk": {
+     "median": 0.004623627200859756,
+     "mean": 0.005234281117892726
+    },
+    "p_bulk": {
+     "median": 0.0021763234423415176,
+     "mean": 0.0025359905290181332
+    },
+    "velocity_bulk": {
+     "median": 0.0012641526600950725,
+     "mean": 0.0014533623900570617
+    }
+   },
+   "attributes": {
+    "recirculation_length_mm": {
+     "cases": 386,
+     "median_abs_error": 0.004474832819445032,
+     "p90_abs_error": 0.012809981819367,
+     "within_uncertainty_rate": 0.9093264248704663
+    },
+    "recirculation_area_mm2": {
+     "cases": 386,
+     "median_abs_error": 0.0038690750374728716,
+     "p90_abs_error": 0.013004144955128423,
+     "within_uncertainty_rate": 0.9507772020725389
+    },
+    "flow_split_upper": {
+     "cases": 386,
+     "median_abs_error": 0.0005682281758515528,
+     "p90_abs_error": 0.0016041008433357903,
+     "within_uncertainty_rate": 0.8082901554404145
+    },
+    "dp_inlet_outlet": {
+     "cases": 386,
+     "median_abs_error": 0.0010528174047759603,
+     "p90_abs_error": 0.0027268542165194538,
+     "within_uncertainty_rate": 1.0
+    },
+    "dissipation": {
+     "cases": 386,
+     "median_abs_error": 0.0010446450421998034,
+     "p90_abs_error": 0.0027393693539136676,
+     "within_uncertainty_rate": 0.9378238341968912
+    },
+    "mean_vorticity": {
+     "cases": 386,
+     "median_abs_error": 0.0005201042131678275,
+     "p90_abs_error": 0.001203575907375074,
+     "within_uncertainty_rate": 0.9093264248704663
+    },
+    "wake_min_u_x": {
+     "cases": 386,
+     "median_abs_error": 0.00154043547809124,
+     "p90_abs_error": 0.004073968157172203,
+     "within_uncertainty_rate": 0.8704663212435233
+    }
+   }
+  },
+  "ood_blockage": {
+   "fields": {
+    "u_x": {
+     "median": 0.0016575467023149382,
+     "mean": 0.0018937962307028246
+    },
+    "u_y": {
+     "median": 0.00517488935768823,
+     "mean": 0.0056558980360717865
+    },
+    "p": {
+     "median": 0.002818453648555641,
+     "mean": 0.003332434700359065
+    },
+    "velocity": {
+     "median": 0.0017837523069467694,
+     "mean": 0.0020405151578740646
+    },
+    "u_x_near": {
+     "median": 0.0322396706837947,
+     "mean": 0.034866625442694726
+    },
+    "u_y_near": {
+     "median": 0.022203712470340725,
+     "mean": 0.02446269855869348
+    },
+    "p_near": {
+     "median": 0.014714826056962697,
+     "mean": 0.01537701980585696
+    },
+    "velocity_near": {
+     "median": 0.02738870530427559,
+     "mean": 0.02977473913155673
+    },
+    "u_x_bulk": {
+     "median": 0.0015381519615805714,
+     "mean": 0.0017875147335666825
+    },
+    "u_y_bulk": {
+     "median": 0.004434227095428946,
+     "mean": 0.0048871594396406115
+    },
+    "p_bulk": {
+     "median": 0.0022085169477688545,
+     "mean": 0.0027520449818894044
+    },
+    "velocity_bulk": {
+     "median": 0.0016315609553162254,
+     "mean": 0.0018985832170195292
+    }
+   },
+   "attributes": {
+    "recirculation_length_mm": {
+     "cases": 224,
+     "median_abs_error": 0.0033168316831683406,
+     "p90_abs_error": 0.007377407493121214,
+     "within_uncertainty_rate": 0.9642857142857143
+    },
+    "recirculation_area_mm2": {
+     "cases": 224,
+     "median_abs_error": 0.0021694247449494768,
+     "p90_abs_error": 0.006444269291144075,
+     "within_uncertainty_rate": 0.9776785714285714
+    },
+    "flow_split_upper": {
+     "cases": 224,
+     "median_abs_error": 0.0005691780213427573,
+     "p90_abs_error": 0.0019547381880162407,
+     "within_uncertainty_rate": 0.8705357142857143
+    },
+    "dp_inlet_outlet": {
+     "cases": 224,
+     "median_abs_error": 0.0012872345813259257,
+     "p90_abs_error": 0.0031769552072126407,
+     "within_uncertainty_rate": 1.0
+    },
+    "dissipation": {
+     "cases": 224,
+     "median_abs_error": 0.0016496726115704614,
+     "p90_abs_error": 0.004135117975080922,
+     "within_uncertainty_rate": 0.9776785714285714
+    },
+    "mean_vorticity": {
+     "cases": 224,
+     "median_abs_error": 0.0006058967753865632,
+     "p90_abs_error": 0.001589190251845716,
+     "within_uncertainty_rate": 0.96875
+    },
+    "wake_min_u_x": {
+     "cases": 224,
+     "median_abs_error": 0.001484425738453865,
+     "p90_abs_error": 0.004257729277014733,
+     "within_uncertainty_rate": 0.90625
+    }
+   }
+  },
+  "ood_rotation": {
+   "fields": {
+    "u_x": {
+     "median": 0.0012349728356690942,
+     "mean": 0.0013262162916080978
+    },
+    "u_y": {
+     "median": 0.005214143374488585,
+     "mean": 0.005353448381109006
+    },
+    "p": {
+     "median": 0.0027976553347516947,
+     "mean": 0.0029710903023553556
+    },
+    "velocity": {
+     "median": 0.001367908620057849,
+     "mean": 0.0014442995803536443
+    },
+    "u_x_near": {
+     "median": 0.029240513329331128,
+     "mean": 0.031103801081121603
+    },
+    "u_y_near": {
+     "median": 0.021885453638573124,
+     "mean": 0.023386559284989436
+    },
+    "p_near": {
+     "median": 0.01782488263964207,
+     "mean": 0.018805363479817597
+    },
+    "velocity_near": {
+     "median": 0.0267512331702824,
+     "mean": 0.027821577583443464
+    },
+    "u_x_bulk": {
+     "median": 0.0011459950856940217,
+     "mean": 0.0012371788115859007
+    },
+    "u_y_bulk": {
+     "median": 0.004523269570879805,
+     "mean": 0.004646364456324781
+    },
+    "p_bulk": {
+     "median": 0.002072150588614306,
+     "mean": 0.0022640388684371624
+    },
+    "velocity_bulk": {
+     "median": 0.0012396561779308844,
+     "mean": 0.0013305133888362067
+    }
+   },
+   "attributes": {
+    "recirculation_length_mm": {
+     "cases": 216,
+     "median_abs_error": 0.004434611602753227,
+     "p90_abs_error": 0.01040157146884349,
+     "within_uncertainty_rate": 0.9722222222222222
+    },
+    "recirculation_area_mm2": {
+     "cases": 216,
+     "median_abs_error": 0.0034359224169632782,
+     "p90_abs_error": 0.008809755422858253,
+     "within_uncertainty_rate": 0.9861111111111112
+    },
+    "flow_split_upper": {
+     "cases": 216,
+     "median_abs_error": 0.0006157731494226919,
+     "p90_abs_error": 0.0014998150186393308,
+     "within_uncertainty_rate": 0.7268518518518519
+    },
+    "dp_inlet_outlet": {
+     "cases": 216,
+     "median_abs_error": 0.0009725776452637214,
+     "p90_abs_error": 0.0021967792751460095,
+     "within_uncertainty_rate": 1.0
+    },
+    "dissipation": {
+     "cases": 216,
+     "median_abs_error": 0.0012266153805812392,
+     "p90_abs_error": 0.0030665343072339662,
+     "within_uncertainty_rate": 0.9768518518518519
+    },
+    "mean_vorticity": {
+     "cases": 216,
+     "median_abs_error": 0.0004853444355790795,
+     "p90_abs_error": 0.0012029593853590008,
+     "within_uncertainty_rate": 0.9861111111111112
+    },
+    "wake_min_u_x": {
+     "cases": 216,
+     "median_abs_error": 0.0015331245958805084,
+     "p90_abs_error": 0.003941074246540666,
+     "within_uncertainty_rate": 0.9490740740740741
+    }
+   }
+  },
+  "ood_position": {
+   "fields": {
+    "u_x": {
+     "median": 0.0013955253723382478,
+     "mean": 0.0016186130349390862
+    },
+    "u_y": {
+     "median": 0.005988984934847985,
+     "mean": 0.0065599485513483475
+    },
+    "p": {
+     "median": 0.003257250355768429,
+     "mean": 0.0036665841736087433
+    },
+    "velocity": {
+     "median": 0.0015458943001330269,
+     "mean": 0.0017545001543086648
+    },
+    "u_x_near": {
+     "median": 0.03208622940150031,
+     "mean": 0.034375377071460655
+    },
+    "u_y_near": {
+     "median": 0.025522152255582957,
+     "mean": 0.02778771149698347
+    },
+    "p_near": {
+     "median": 0.020407353427531076,
+     "mean": 0.021943822920479732
+    },
+    "velocity_near": {
+     "median": 0.030873324816008824,
+     "mean": 0.03180918168662187
+    },
+    "u_x_bulk": {
+     "median": 0.0012688845295682463,
+     "mean": 0.0015125119010259485
+    },
+    "u_y_bulk": {
+     "median": 0.005174930952960748,
+     "mean": 0.005690724995994318
+    },
+    "p_bulk": {
+     "median": 0.002449703432055918,
+     "mean": 0.002867985038845357
+    },
+    "velocity_bulk": {
+     "median": 0.0014118538692749277,
+     "mean": 0.0016185231936690666
+    }
+   },
+   "attributes": {
+    "recirculation_length_mm": {
+     "cases": 204,
+     "median_abs_error": 0.005415022181360345,
+     "p90_abs_error": 0.016721302408410053,
+     "within_uncertainty_rate": 0.8921568627450981
+    },
+    "recirculation_area_mm2": {
+     "cases": 204,
+     "median_abs_error": 0.0047984690869664615,
+     "p90_abs_error": 0.013567463286967094,
+     "within_uncertainty_rate": 0.9411764705882353
+    },
+    "flow_split_upper": {
+     "cases": 204,
+     "median_abs_error": 0.0006533966470798178,
+     "p90_abs_error": 0.0020741169899937384,
+     "within_uncertainty_rate": 0.7990196078431373
+    },
+    "dp_inlet_outlet": {
+     "cases": 204,
+     "median_abs_error": 0.0011784997573532044,
+     "p90_abs_error": 0.002660313612382053,
+     "within_uncertainty_rate": 1.0
+    },
+    "dissipation": {
+     "cases": 204,
+     "median_abs_error": 0.0013941955138299551,
+     "p90_abs_error": 0.0034333497037280164,
+     "within_uncertainty_rate": 0.8823529411764706
+    },
+    "mean_vorticity": {
+     "cases": 204,
+     "median_abs_error": 0.0004998306591982664,
+     "p90_abs_error": 0.0014977074308880692,
+     "within_uncertainty_rate": 0.9117647058823529
+    },
+    "wake_min_u_x": {
+     "cases": 204,
+     "median_abs_error": 0.0017701881006360054,
+     "p90_abs_error": 0.004798227921128274,
+     "within_uncertainty_rate": 0.8333333333333334
+    }
+   }
+  }
+ },
+ "cost": {
+  "gpu": "NVIDIA A40",
+  "training_gpu_hours": 1.586,
+  "epochs": 30,
+  "inference_seconds_per_case_median": 0.037839293479919434,
+  "parameters": 7766915,
+  "best_val_velocity_rel_l2": 0.00488863093778491
+ },
+ "config": {
+  "dataset": "/scratch/asaydam21/ms-cofd-2dsl/dataset/v1.0.0",
+  "run": "/scratch/asaydam21/ms-cofd-2dsl/runs/v1-2026-11-06/T2-2mm/unet-s2",
+  "task": "T2-2mm",
+  "model": "unet",
+  "seed": 2,
+  "uncertainty": "references/label_uncertainty.parquet",
+  "epochs": 30,
+  "batch": 4,
+  "lr": 0.001,
+  "width": null,
+  "modes_x": 48,
+  "modes_y": 16,
+  "workers": 8,
+  "hours": 10.0,
+  "max_train": null,
+  "splits": [
+   "test",
+   "ood_blockage",
+   "ood_rotation",
+   "ood_position"
+  ],
+  "revision": "01fa5990be1febaca8cee7f9ebc167747794d6ac",
+  "training_revision": "01fa5990be1febaca8cee7f9ebc167747794d6ac",
+  "slurm_job_id": "1948469"
+ }
+}

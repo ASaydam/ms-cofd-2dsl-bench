@@ -4,6 +4,11 @@ Tasks, metrics and baselines for **MS-COFD-2DSL** (Multi-Scale Central Object Fl
 dataset has 4,500 obstacles in a 360 × 120 mm channel, each solved to steady state on five levels from 2 mm to
 0.25 mm, with an uncertainty for every label.
 
+The data is on Hugging Face: the arrays and tables at
+[asaydam/ms-cofd-2dsl](https://huggingface.co/datasets/asaydam/ms-cofd-2dsl), and the archived OpenFOAM case of every
+run at [asaydam/ms-cofd-2dsl-raw](https://huggingface.co/datasets/asaydam/ms-cofd-2dsl-raw)
+(DOI [10.57967/hf/11553](https://doi.org/10.57967/hf/11553)). The benchmark needs only the arrays and tables.
+
 The tasks, splits and metrics are fixed in [docs/tasks-and-metrics.md](docs/tasks-and-metrics.md):
 
 - **T1, shape to flow:** geometry → u_x, u_y, p on the 0.25 mm grid.
@@ -48,8 +53,8 @@ Open a pull request with:
 ## Leaderboard
 
 Reference results on MS-COFD-2DSL v1.0.0 (release identifier: MD5 of `checksums.md5`
-209ebc4f85e13235bbc3e6b7f2a63243). Networks: mean ± standard deviation over seeds 0–2, trained and scored at
-2b8b8e7 on one A40; scores were checked to reproduce exactly from the saved checkpoints.
+82a46f931bb1d60b57dbc564305019fb). Networks: mean ± standard deviation over seeds 0–2, trained and scored at
+01fa599 on one A40; scores were checked to reproduce exactly from the saved checkpoints.
 
 **Fields (T1, T2):** median relative L2 error over the cases, in %. Velocity on the test split and the three
 out-of-distribution sets; pressure on the test split.
@@ -58,17 +63,17 @@ out-of-distribution sets; pressure on the test split.
 |---|---|---|---|---|---|---|
 | T1 | training mean | 22.84 | 29.66 | 22.18 | 29.24 | 34.40 |
 | T1 | nearest training case | 10.97 | 17.04 | 11.12 | 11.87 | 19.34 |
-| T1 | UNet | 0.751 ± 0.010 | 1.286 | 0.741 | 0.955 | 1.422 ± 0.008 |
-| T1 | **FNO** | **0.384 ± 0.007** | **0.947** | **0.398** | **0.482** | **0.956 ± 0.028** |
+| T1 | UNet | 0.765 ± 0.021 | 1.297 | 0.769 | 0.967 | 1.447 ± 0.024 |
+| T1 | **FNO** | **0.382 ± 0.008** | **0.949** | **0.396** | **0.482** | **0.955 ± 0.029** |
 | T2-2mm | interpolation | 0.98 | 1.25 | 1.02 | 0.98 | 1.89 |
-| T2-2mm | FNO | 0.208 ± 0.002 | 0.262 | 0.193 | 0.221 | 0.442 ± 0.003 |
-| T2-2mm | **UNet** | **0.139 ± 0.002** | **0.181** | **0.137** | **0.156** | **0.300 ± 0.007** |
+| T2-2mm | FNO | 0.208 ± 0.002 | 0.262 | 0.193 | 0.221 | 0.442 ± 0.004 |
+| T2-2mm | **UNet** | **0.139 ± 0.002** | **0.180** | **0.137** | **0.154** | **0.299 ± 0.003** |
 | T2-1mm-FO | interpolation | 1.94 | 3.33 | 2.44 | 1.85 | 3.82 |
-| T2-1mm-FO | FNO | **0.216 ± 0.001** | **0.295** | **0.218** | 0.237 | 0.425 ± 0.001 |
-| T2-1mm-FO | UNet | 0.219 ± 0.002 | 0.302 | 0.220 | **0.232** | **0.407 ± 0.006** |
+| T2-1mm-FO | FNO | **0.216 ± 0.002** | **0.295** | 0.218 | 0.237 | 0.424 ± 0.001 |
+| T2-1mm-FO | UNet | 0.217 ± 0.002 | 0.298 | **0.216** | **0.228** | **0.398 ± 0.006** |
 | T2-1mm | interpolation | 0.42 | 0.52 | 0.48 | 0.39 | 1.09 |
-| T2-1mm | FNO | 0.119 ± 0.001 | 0.147 | 0.117 | 0.123 | 0.292 ± 0.004 |
-| T2-1mm | **UNet** | **0.075 ± 0.000** | **0.097** | **0.072** | **0.079** | **0.187 ± 0.001** |
+| T2-1mm | FNO | 0.118 ± 0.001 | 0.147 | 0.117 | 0.123 | 0.292 ± 0.003 |
+| T2-1mm | **UNet** | **0.075 ± 0.001** | **0.096** | **0.073** | **0.080** | **0.188 ± 0.001** |
 | T2 (any input) | solve at 0.5 mm | 0.18 | 0.23 | 0.20 | 0.18 | 0.50 |
 
 - **Interpolation:** bicubic for the velocity and bicubic with the obstacle filled for the pressure, the best
@@ -92,8 +97,8 @@ No network has been trained for T3 yet.
 
 **Cost:** UNet 7.8 M parameters, 1.6 GPU-hours of training, 38 ms per case; FNO 25 M parameters, 2.6 GPU-hours,
 35 ms per case (A40, inference without the coarse solve). The coarse solves take 8 s (2 mm), 77 s (1 mm, first order)
-and 110 s (1 mm) on one core, the 0.5 mm solve 19 min (medians). The result files of every entry will be added under
-`results/` with the first public release.
+and 110 s (1 mm) on one core, the 0.5 mm solve 19 min (medians). The result files of every entry are in
+`results/`: one folder per baseline, and one per network and seed (`unet-s0`, …).
 
 ## Licence
 
