@@ -101,6 +101,8 @@ No network has been trained for T3 yet.
 and 110 s (1 mm) on one core, the 0.5 mm solve 19 min (medians). The result files of every entry are in
 `results/`: one folder per baseline, and one per network and seed (`unet-s0`, …).
 
-## Licence
+## Licence and citation
 
-Code: MIT. The dataset itself: CC BY 4.0.
+Code: MIT. The dataset itself: CC BY 4.0. The dataset is described in
+[arXiv:2611.18763](https://arxiv.org/abs/2611.18763). Please cite the paper and the dataset as given in
+`CITATION.cff`.

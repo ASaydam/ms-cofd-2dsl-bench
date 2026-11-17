@@ -1,0 +1,70 @@
+cff-version: 1.2.0
+message: "If you use this benchmark, please cite the paper below and the dataset."
+title: "MS-COFD-2DSL benchmark: tasks, metrics and baselines"
+type: software
+license: MIT
+version: 1.0.0
+date-released: 2026-11-10
+repository-code: "https://github.com/ASaydam/ms-cofd-2dsl-bench"
+authors:
+  - family-names: Saydam
+    given-names: Alper
+    affiliation: "KUIS AI Center and Computational Sciences and Engineering, Koç University"
+    orcid: "https://orcid.org/0000-0002-0887-9801"
+  - family-names: Akgün
+    given-names: Barış
+    affiliation: "KUIS AI Center, Koç University"
+    orcid: "https://orcid.org/0000-0002-4079-6889"
+keywords:
+  - computational fluid dynamics
+  - benchmark
+  - multi-fidelity
+  - surrogate modelling
+  - laminar flow
+  - machine learning
+# the paper (arXiv preprint until the journal version is out); the dataset is in references
+preferred-citation:
+  type: article
+  status: preprint
+  title: "A multi-fidelity dataset of two-dimensional steady laminar channel flow around obstacles"
+  authors:
+    - family-names: Saydam
+      given-names: Alper
+      orcid: "https://orcid.org/0000-0002-0887-9801"
+    - family-names: Akgün
+      given-names: Barış
+      orcid: "https://orcid.org/0000-0002-4079-6889"
+  journal: "arXiv"
+  year: 2026
+  doi: "10.48550/arXiv.2611.18763"
+  url: "https://arxiv.org/abs/2611.18763"
+references:
+  - type: data
+    title: "ms-cofd-2dsl"
+    abstract: "The arrays, tables, data card and checksums of version 1.0.0 of the dataset."
+    authors:
+      - family-names: Saydam
+        given-names: Alper
+        orcid: "https://orcid.org/0000-0002-0887-9801"
+      - family-names: Akgün
+        given-names: Barış
+        orcid: "https://orcid.org/0000-0002-4079-6889"
+    publisher:
+      name: "Hugging Face"
+    year: 2026
+    version: "b312def"
+    doi: "10.57967/hf/11554"
+    url: "https://huggingface.co/datasets/asaydam/ms-cofd-2dsl"
+  - type: software
+    title: "MS-COFD-2DSL: Multi-Scale Central Object Flow Dataset - 2D Steady Laminar (generation pipeline)"
+    abstract: "The pipeline that generated the dataset, at tag data-v1.0.0."
+    authors:
+      - family-names: Saydam
+        given-names: Alper
+        orcid: "https://orcid.org/0000-0002-0887-9801"
+      - family-names: Akgün
+        given-names: Barış
+        orcid: "https://orcid.org/0000-0002-4079-6889"
+    year: 2026
+    version: "data-v1.0.0"
+    repository-code: "https://github.com/ASaydam/ms-cofd-2dsl"
